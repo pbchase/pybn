@@ -89,7 +89,7 @@ def FactorProduct(A,B):
     # Construct the mapping between variables in A and B and variables in C.
     # In the code below, we have that
     #    mapA(i) = j, if and only if, A.var(i) == C.var(j)
-    # and similarly 
+    # and similarly
     #    mapB(i) = j, if and only if, B.var(i) == C.var(j)
     # For example, if A.var = [3 1 4], B.var = [4 5], and C.var = [1 3 4 5],
     # then, mapA = [2 1 3] and mapB = [3 4]; mapA(1) = 2 because A.var(1) = 3
@@ -107,7 +107,7 @@ def FactorProduct(A,B):
 
     # Initialize the factor values of C:
     #   prod(C.card) is the number of entries in C
-    C.val = np.zeros(np.prod(C.card))
+    C.val = np.zeros(np.prod(C.card).astype(np.int))
 
     # Compute some helper indices
     assignment = IndexToAssignment(np.arange(np.prod(C.card)),C.card)
@@ -116,7 +116,7 @@ def FactorProduct(A,B):
 
     # Correctly populate the factor values of C
     for i in range(int(np.prod(C.card))):
-      C.val[i] = A.val[indxA[i]]*B.val[indxB[i]]
+      C.val[i] = A.val[int(indxA[i])]*B.val[int(indxB[i])]
 
     return C
 
@@ -162,7 +162,7 @@ def FactorMarginalization(A, V):
 
       # Initialize B.card and B.val
       B.card = A.card[mapB]
-      B.val = np.zeros(np.prod(B.card))
+      B.val = np.zeros(np.prod(B.card).astype(np.int))
 
       # Compute some helper indices
       assignment = IndexToAssignment(np.arange(np.prod(A.card)),A.card)
@@ -170,7 +170,7 @@ def FactorMarginalization(A, V):
 
       # Correctly populate the factor values of B
       for i in range(int(len(indxB))):
-        B.val[indxB[i]] += A.val[i]
+        B.val[int(indxB[i])] += A.val[i]
 
       return B
 
@@ -188,7 +188,7 @@ def ObserveEvidence(F, E):
 
   :Args:
     - F (Factor): Factor F
-    - E (tuple):   E is an N-by-2 matrix, where each row consists of a variable/value pair.\n 
+    - E (tuple):   E is an N-by-2 matrix, where each row consists of a variable/value pair.\n
   Variables are in the first column and values are in the second column.
 
   :Returns:
@@ -372,8 +372,8 @@ def IndexToAssignment(I,D):
   IndexToAssignment Convert index to variable assignment.
 
   ``A = IndexToAssignment(I, D)`` converts an index, I, into the .val vector
-  into an assignment over variables with cardinality D. If I is a vector, 
-  then the function produces a matrix of assignments, one assignment 
+  into an assignment over variables with cardinality D. If I is a vector,
+  then the function produces a matrix of assignments, one assignment
   per row.
 
   :Args:
